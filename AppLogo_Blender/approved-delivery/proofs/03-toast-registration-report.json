@@ -1,0 +1,44 @@
+{
+  "geometry_authority": "/Users/z/Documents/倒数日/AppLogo_Blender/approved-delivery/assets/matters.svg",
+  "appearance_authority": "/Users/z/Documents/倒数日/AppLogo_Blender/approved-delivery/assets/toast-reference-1254.png",
+  "method": "one whole-image affine registration; no repainting, inpainting, feature relocation, or material regeneration",
+  "color_conversion": "untagged/sRGB-chunk -> embedded sRGB",
+  "source_outer_bbox_1024": [
+    122,
+    127,
+    897,
+    909
+  ],
+  "target_front_face_bbox_1024": [
+    128,
+    128,
+    896,
+    896
+  ],
+  "affine_matrix_1024": [
+    [
+      0.9909677505493164,
+      0.0,
+      7.101935386657715
+    ],
+    [
+      0.0,
+      0.9820972084999084,
+      3.2736573219299316
+    ]
+  ],
+  "registered_outer_bbox_1024": [
+    128,
+    128,
+    896,
+    896
+  ],
+  "outer_mask_iou": 0.9791992504637942,
+  "front_face_alpha_verdict": "PASS",
+  "front_face_alpha_differing_pixels": 0,
+  "allowed_overflow": "side thickness, bevel, material grains, contact shadow, and background",
+  "final": "03-toast-final-1024.png",
+  "final_sha256": "5c9f17a7a68c01458d8d55ca83fde1b9f95fea9fb4c264ddb075e36662bf54e6",
+  "highres_final": null,
+  "overlay": "03-toast-model-overlay.png"
+}

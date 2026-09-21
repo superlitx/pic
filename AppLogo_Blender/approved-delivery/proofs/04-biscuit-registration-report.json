@@ -1,0 +1,44 @@
+{
+  "geometry_authority": "/Users/z/Documents/倒数日/AppLogo_Blender/approved-delivery/assets/matters.svg",
+  "appearance_authority": "/Users/z/Documents/倒数日/AppLogo_Blender/approved-delivery/assets/biscuit-reference-4096.png",
+  "method": "one whole-image affine registration; no repainting, inpainting, feature relocation, or material regeneration",
+  "color_conversion": "Display P3 -> sRGB",
+  "source_outer_bbox_1024": [
+    132,
+    123,
+    890,
+    872
+  ],
+  "target_front_face_bbox_1024": [
+    128,
+    128,
+    896,
+    896
+  ],
+  "affine_matrix_1024": [
+    [
+      1.0131926536560059,
+      0.0,
+      -5.741425037384033
+    ],
+    [
+      0.0,
+      1.0253671407699585,
+      1.8798397779464722
+    ]
+  ],
+  "registered_outer_bbox_1024": [
+    128,
+    128,
+    896,
+    896
+  ],
+  "outer_mask_iou": 0.9767897291821233,
+  "front_face_alpha_verdict": "PASS",
+  "front_face_alpha_differing_pixels": 0,
+  "allowed_overflow": "side thickness, bevel, material grains, contact shadow, and background",
+  "final": "04-biscuit-final-1024.png",
+  "final_sha256": "064113a2641530be8a7d9ee6cc43fc8effa2cef7f6730881a865a593ebbe98fe",
+  "highres_final": "04-biscuit-final-4096.png",
+  "overlay": "04-biscuit-model-overlay.png"
+}
