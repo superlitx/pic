@@ -1,0 +1,44 @@
+{
+  "geometry_authority": "/Users/z/Documents/倒数日/AppLogo_Blender/approved-delivery/assets/matters.svg",
+  "appearance_authority": "AppLogo_Blender/references/figma/highres/02-export.png",
+  "method": "one whole-image affine registration; no repainting, inpainting, feature relocation, or material regeneration",
+  "color_conversion": "Display P3 -> sRGB",
+  "source_outer_bbox_1024": [
+    122,
+    122,
+    897,
+    896
+  ],
+  "target_front_face_bbox_1024": [
+    128,
+    128,
+    896,
+    896
+  ],
+  "affine_matrix_1024": [
+    [
+      0.9909677505493164,
+      0.0,
+      7.101935386657715
+    ],
+    [
+      0.0,
+      0.9922480583190918,
+      6.945736408233643
+    ]
+  ],
+  "registered_outer_bbox_1024": [
+    128,
+    128,
+    896,
+    896
+  ],
+  "outer_mask_iou": 0.9910111171330751,
+  "front_face_alpha_verdict": "PASS",
+  "front_face_alpha_differing_pixels": 0,
+  "allowed_overflow": "side thickness, bevel, material grains, contact shadow, and background",
+  "final": "02-iridescent-gradient-final-1024.png",
+  "final_sha256": "15021e7dba547e0545b6eb6147929d9f46d1f7edce8b81275f2fa078ba0c9eb9",
+  "highres_final": null,
+  "overlay": "02-iridescent-gradient-model-overlay.png"
+}

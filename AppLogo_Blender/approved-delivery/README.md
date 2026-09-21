@@ -1,10 +1,14 @@
-# Matters App Logo — 已确认交付
+# Matters App Logo — 六款材质交付
 
-本目录只包含已经确认的两张图：
+`outputs/00-six-variant-contact-sheet.png` 是整套预览，六张独立成品为：
 
+- `outputs/01-orange-flock-final-1024.png`：橙色短绒，1024 × 1024，sRGB。
+- `outputs/02-iridescent-gradient-final-1024.png`：彩虹软胶，1024 × 1024，sRGB。
 - `outputs/03-toast-final-1024.png`：面包，1024 × 1024，sRGB。
 - `outputs/04-biscuit-final-1024.png`：饼干，1024 × 1024，sRGB。
 - `outputs/04-biscuit-final-4096.png`：饼干高分辨率版，4096 × 4096，sRGB。
+- `outputs/05-gold-glass-final-1024.png`：金色玻璃，1024 × 1024，sRGB。
+- `outputs/06-holographic-final-1024.png`：镭射，1024 × 1024，sRGB。
 
 ## 不可修改的规则
 
@@ -21,7 +25,7 @@
 
 ## 文件结构
 
-- `assets/`：原始 SVG、权威遮罩和两张已确认参考图。
+- `assets/`：原始 SVG、权威遮罩、六款材质参考图和 sRGB 色彩配置。
 - `models/`：Blender 正面约束模型。
 - `outputs/`：可直接导入 Figma 的最终图片。
 - `proofs/`：模型叠加图、正面 Alpha 验证和配准报告。
@@ -36,7 +40,40 @@
 python3 -m pip install -r AppLogo_Blender/approved-delivery/requirements.txt
 ```
 
-重新生成饼干：
+重新生成六张 1024 成品：
+
+```bash
+python3 AppLogo_Blender/approved-delivery/scripts/register_reference.py \
+  --source AppLogo_Blender/approved-delivery/assets/01-orange-flock-reference-1024.png \
+  --slug 01-orange-flock
+
+python3 AppLogo_Blender/approved-delivery/scripts/register_reference.py \
+  --source AppLogo_Blender/approved-delivery/assets/02-iridescent-gradient-reference-1024.png \
+  --slug 02-iridescent-gradient
+
+python3 AppLogo_Blender/approved-delivery/scripts/register_reference.py \
+  --source AppLogo_Blender/approved-delivery/assets/toast-reference-1254.png \
+  --slug 03-toast \
+  --support-kernel 151 \
+  --erode-kernel 91
+
+python3 AppLogo_Blender/approved-delivery/scripts/register_reference.py \
+  --source AppLogo_Blender/approved-delivery/assets/biscuit-reference-4096.png \
+  --slug 04-biscuit \
+  --support-kernel 111 \
+  --erode-kernel 61 \
+  --highres 4096
+
+python3 AppLogo_Blender/approved-delivery/scripts/register_reference.py \
+  --source AppLogo_Blender/approved-delivery/assets/05-gold-glass-reference-1024.png \
+  --slug 05-gold-glass
+
+python3 AppLogo_Blender/approved-delivery/scripts/register_reference.py \
+  --source AppLogo_Blender/approved-delivery/assets/06-holographic-reference-1024.png \
+  --slug 06-holographic
+```
+
+单独重新生成饼干高分辨率版：
 
 ```bash
 python3 AppLogo_Blender/approved-delivery/scripts/register_reference.py \
@@ -45,16 +82,6 @@ python3 AppLogo_Blender/approved-delivery/scripts/register_reference.py \
   --support-kernel 111 \
   --erode-kernel 61 \
   --highres 4096
-```
-
-重新生成面包：
-
-```bash
-python3 AppLogo_Blender/approved-delivery/scripts/register_reference.py \
-  --source AppLogo_Blender/approved-delivery/assets/toast-reference-1254.png \
-  --slug 03-toast \
-  --support-kernel 151 \
-  --erode-kernel 91
 ```
 
 重新生成 Blender 约束模型：
@@ -70,4 +97,3 @@ blender --background --factory-startup \
 mkdir -p ~/.codex/skills
 cp -R skills/locked-svg-material-render ~/.codex/skills/
 ```
-

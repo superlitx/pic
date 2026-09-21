@@ -1,0 +1,44 @@
+{
+  "geometry_authority": "/Users/z/Documents/倒数日/AppLogo_Blender/approved-delivery/assets/matters.svg",
+  "appearance_authority": "AppLogo_Blender/references/figma/highres/01-export.png",
+  "method": "one whole-image affine registration; no repainting, inpainting, feature relocation, or material regeneration",
+  "color_conversion": "Display P3 -> sRGB",
+  "source_outer_bbox_1024": [
+    128,
+    128,
+    896,
+    896
+  ],
+  "target_front_face_bbox_1024": [
+    128,
+    128,
+    896,
+    896
+  ],
+  "affine_matrix_1024": [
+    [
+      1.0,
+      0.0,
+      0.0
+    ],
+    [
+      0.0,
+      1.0,
+      0.0
+    ]
+  ],
+  "registered_outer_bbox_1024": [
+    128,
+    128,
+    896,
+    896
+  ],
+  "outer_mask_iou": 0.9983335598031222,
+  "front_face_alpha_verdict": "PASS",
+  "front_face_alpha_differing_pixels": 0,
+  "allowed_overflow": "side thickness, bevel, material grains, contact shadow, and background",
+  "final": "01-orange-flock-final-1024.png",
+  "final_sha256": "15cdadf57379e113990e8413c4f0cb905a8f273027b382aa62d6bfd36b0cfbb4",
+  "highres_final": null,
+  "overlay": "01-orange-flock-model-overlay.png"
+}

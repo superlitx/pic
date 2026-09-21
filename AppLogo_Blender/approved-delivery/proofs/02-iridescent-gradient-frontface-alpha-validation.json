@@ -1,0 +1,137 @@
+{
+  "status": "PASS",
+  "mask": "/Users/z/Documents/\u5012\u6570\u65e5/AppLogo_Blender/approved-delivery/assets/matters-svg-exact-mask.png",
+  "candidate": "/Users/z/Documents/\u5012\u6570\u65e5/AppLogo_Blender/approved-delivery/proofs/02-iridescent-gradient-frontface-pass.png",
+  "reference_size": [
+    1024,
+    1024
+  ],
+  "candidate_size": [
+    1024,
+    1024
+  ],
+  "same_size": true,
+  "alpha_byte_equal": true,
+  "differing_alpha_pixels": 0,
+  "max_alpha_delta": 0,
+  "reference_bbox": [
+    128,
+    128,
+    896,
+    896
+  ],
+  "candidate_bbox": [
+    128,
+    128,
+    896,
+    896
+  ],
+  "reference_components": [
+    {
+      "area": 265881,
+      "bbox": [
+        128,
+        128,
+        896,
+        896
+      ],
+      "centroid": [
+        511.49855762540386,
+        511.50083307946034
+      ]
+    },
+    {
+      "area": 7631,
+      "bbox": [
+        434,
+        568,
+        621,
+        659
+      ],
+      "centroid": [
+        529.052548814048,
+        623.0471759926616
+      ]
+    },
+    {
+      "area": 5089,
+      "bbox": [
+        374,
+        394,
+        434,
+        502
+      ],
+      "centroid": [
+        403.5171939477304,
+        447.49164865395954
+      ]
+    },
+    {
+      "area": 5089,
+      "bbox": [
+        590,
+        394,
+        650,
+        502
+      ],
+      "centroid": [
+        619.4828060522696,
+        447.49164865395954
+      ]
+    }
+  ],
+  "candidate_components": [
+    {
+      "area": 265881,
+      "bbox": [
+        128,
+        128,
+        896,
+        896
+      ],
+      "centroid": [
+        511.49855762540386,
+        511.50083307946034
+      ]
+    },
+    {
+      "area": 7631,
+      "bbox": [
+        434,
+        568,
+        621,
+        659
+      ],
+      "centroid": [
+        529.052548814048,
+        623.0471759926616
+      ]
+    },
+    {
+      "area": 5089,
+      "bbox": [
+        374,
+        394,
+        434,
+        502
+      ],
+      "centroid": [
+        403.5171939477304,
+        447.49164865395954
+      ]
+    },
+    {
+      "area": 5089,
+      "bbox": [
+        590,
+        394,
+        650,
+        502
+      ],
+      "centroid": [
+        619.4828060522696,
+        447.49164865395954
+      ]
+    }
+  ]
+}

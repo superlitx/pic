@@ -1,0 +1,44 @@
+{
+  "geometry_authority": "/Users/z/Documents/倒数日/AppLogo_Blender/approved-delivery/assets/matters.svg",
+  "appearance_authority": "AppLogo_Blender/references/figma/highres/06-export.png",
+  "method": "one whole-image affine registration; no repainting, inpainting, feature relocation, or material regeneration",
+  "color_conversion": "Display P3 -> sRGB",
+  "source_outer_bbox_1024": [
+    102,
+    98,
+    920,
+    900
+  ],
+  "target_front_face_bbox_1024": [
+    128,
+    128,
+    896,
+    896
+  ],
+  "affine_matrix_1024": [
+    [
+      0.9388753175735474,
+      0.0,
+      32.234718322753906
+    ],
+    [
+      0.0,
+      0.9576059579849243,
+      34.15461349487305
+    ]
+  ],
+  "registered_outer_bbox_1024": [
+    128,
+    128,
+    896,
+    896
+  ],
+  "outer_mask_iou": 0.9759209344115004,
+  "front_face_alpha_verdict": "PASS",
+  "front_face_alpha_differing_pixels": 0,
+  "allowed_overflow": "side thickness, bevel, material grains, contact shadow, and background",
+  "final": "06-holographic-final-1024.png",
+  "final_sha256": "f1181069c52afe0da92184adbf50a8334de2f48923f676cecf5af3338c0cb82c",
+  "highres_final": null,
+  "overlay": "06-holographic-model-overlay.png"
+}
