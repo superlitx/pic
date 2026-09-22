@@ -1,12 +1,12 @@
 {
   "geometry_authority": "/Users/z/Documents/倒数日/AppLogo_Blender/approved-delivery/assets/matters.svg",
-  "appearance_authority": "AppLogo_Blender/references/figma/highres/01-export.png",
+  "appearance_authority": "AppLogo_Blender/approved-delivery/assets/01-orange-inset-flock-reference-1254.png",
   "method": "one whole-image affine registration; no repainting, inpainting, feature relocation, or material regeneration",
-  "color_conversion": "Display P3 -> sRGB",
+  "color_conversion": "untagged/sRGB-chunk -> embedded sRGB",
   "source_outer_bbox_1024": [
-    128,
-    128,
-    896,
+    119,
+    107,
+    913,
     896
   ],
   "target_front_face_bbox_1024": [
@@ -17,14 +17,14 @@
   ],
   "affine_matrix_1024": [
     [
-      1.0,
+      0.9672544002532959,
       0.0,
-      0.0
+      12.89672565460205
     ],
     [
       0.0,
-      1.0,
-      0.0
+      0.9733840227127075,
+      23.84790802001953
     ]
   ],
   "registered_outer_bbox_1024": [
@@ -33,12 +33,12 @@
     896,
     896
   ],
-  "outer_mask_iou": 0.9983335598031222,
+  "outer_mask_iou": 0.9708324790793995,
   "front_face_alpha_verdict": "PASS",
   "front_face_alpha_differing_pixels": 0,
   "allowed_overflow": "side thickness, bevel, material grains, contact shadow, and background",
-  "final": "01-orange-flock-final-1024.png",
-  "final_sha256": "15cdadf57379e113990e8413c4f0cb905a8f273027b382aa62d6bfd36b0cfbb4",
+  "final": "01-orange-inset-flock-final-1024.png",
+  "final_sha256": "f2e4f1eb3df32862c86eee6088279a3b490337b820899b77bffed2de13463722",
   "highres_final": null,
-  "overlay": "01-orange-flock-model-overlay.png"
+  "overlay": "01-orange-inset-flock-model-overlay.png"
 }

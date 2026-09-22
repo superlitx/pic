@@ -2,7 +2,7 @@
 
 `outputs/00-six-variant-contact-sheet.png` 是整套预览，六张独立成品为：
 
-- `outputs/01-orange-flock-final-1024.png`：橙色短绒，1024 × 1024，sRGB。
+- `outputs/01-orange-inset-flock-final-1024.png`：橙色短绒填充凹面，1024 × 1024，sRGB；保留白色背景与接地投影。
 - `outputs/02-iridescent-gradient-final-1024.png`：彩虹软胶，1024 × 1024，sRGB。
 - `outputs/03-toast-final-1024.png`：面包，1024 × 1024，sRGB。
 - `outputs/04-biscuit-final-1024.png`：饼干，1024 × 1024，sRGB。
@@ -44,8 +44,10 @@ python3 -m pip install -r AppLogo_Blender/approved-delivery/requirements.txt
 
 ```bash
 python3 AppLogo_Blender/approved-delivery/scripts/register_reference.py \
-  --source AppLogo_Blender/approved-delivery/assets/01-orange-flock-reference-1024.png \
-  --slug 01-orange-flock
+  --source AppLogo_Blender/approved-delivery/assets/01-orange-inset-flock-reference-1254.png \
+  --slug 01-orange-inset-flock \
+  --support-kernel 151 \
+  --erode-kernel 91
 
 python3 AppLogo_Blender/approved-delivery/scripts/register_reference.py \
   --source AppLogo_Blender/approved-delivery/assets/02-iridescent-gradient-reference-1024.png \
