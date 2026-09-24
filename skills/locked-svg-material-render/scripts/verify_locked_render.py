@@ -3,6 +3,7 @@
 
 import argparse
 import json
+import hashlib
 from collections import deque
 from pathlib import Path
 
@@ -15,6 +16,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--mask", required=True, type=Path)
     parser.add_argument("--candidate", required=True, type=Path)
     parser.add_argument("--report", required=True, type=Path)
+    parser.add_argument("--final", type=Path, help="Bind diagnostic to exact final bytes; does not certify RGB geometry")
     parser.add_argument("--threshold", type=int, default=128)
     return parser.parse_args()
 
@@ -76,12 +78,22 @@ def main() -> None:
 
     report = {
         "status": "FAIL",
+        "scope": "front_face_alpha_only",
+        "delivery_ready": False,
+        "visible_edges": "NOT_EVALUATED",
+        "material": "NOT_EVALUATED",
+        "warning": "Coverage PASS does not certify final RGB geometry or authorize delivery; use workflow.py",
+        "candidate_sha256": hashlib.sha256(args.candidate.read_bytes()).hexdigest(),
+        "mask_sha256": hashlib.sha256(args.mask.read_bytes()).hexdigest(),
         "mask": str(args.mask),
         "candidate": str(args.candidate),
         "reference_size": list(reference_image.size),
         "candidate_size": list(candidate_image.size),
         "same_size": same_size,
     }
+    if args.final:
+        report["final"] = str(args.final)
+        report["final_sha256"] = hashlib.sha256(args.final.read_bytes()).hexdigest()
 
     if same_size:
         reference = np.asarray(reference_image, dtype=np.int16)

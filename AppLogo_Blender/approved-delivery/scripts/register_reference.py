@@ -3,7 +3,8 @@
 
 This script never repaints or regenerates the source. It applies one affine
 transform to the complete image, preserves permitted depth/effect overflow,
-and creates an exact-alpha front-face proof plus an opaque overlay.
+and creates an UNVALIDATED proposal plus an opaque overlay. It cannot produce
+a front-face proof: pasting the source alpha onto unrelated RGB proves nothing.
 """
 
 from __future__ import annotations
@@ -13,12 +14,7 @@ import hashlib
 from io import BytesIO
 import json
 from pathlib import Path
-import subprocess
 import sys
-
-import cv2
-import numpy as np
-from PIL import Image, ImageCms
 
 
 BUNDLE = Path(__file__).resolve().parents[1]
@@ -26,7 +22,6 @@ REPO = BUNDLE.parents[1]
 DEFAULT_MASK = BUNDLE / "assets/matters-svg-exact-mask.png"
 DEFAULT_SVG = BUNDLE / "assets/matters.svg"
 SRGB_PROFILE = BUNDLE / "assets/sRGB.icc"
-VERIFIER = REPO / "skills/locked-svg-material-render/scripts/verify_locked_render.py"
 
 
 def parse_args() -> argparse.Namespace:
@@ -35,8 +30,10 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--slug", required=True)
     parser.add_argument("--mask", type=Path, default=DEFAULT_MASK)
     parser.add_argument("--svg", type=Path, default=DEFAULT_SVG)
-    parser.add_argument("--output-dir", type=Path, default=BUNDLE / "outputs")
-    parser.add_argument("--proof-dir", type=Path, default=BUNDLE / "proofs")
+    parser.add_argument("--proposal-only", action="store_true", help="Acknowledge that bbox fitting cannot certify any visible geometry")
+    parser.add_argument("--assume-srgb", action="store_true", help="Explicit assumption for an untagged source; tagged sources are always ICC-converted")
+    parser.add_argument("--output-dir", type=Path, default=REPO / "work/registration-proposals")
+    parser.add_argument("--proof-dir", type=Path, default=REPO / "work/registration-proposals/proofs")
     parser.add_argument("--support-kernel", type=int, default=111)
     parser.add_argument("--erode-kernel", type=int, default=61)
     parser.add_argument("--highres", type=int, default=0)
@@ -93,34 +90,30 @@ def segment_outer(
     return fill_outer(np.uint8(components == center_label) * 255)
 
 
-def to_srgb(source: Image.Image) -> tuple[Image.Image, bytes, str]:
-    srgb = ImageCms.ImageCmsProfile(str(SRGB_PROFILE))
-    embedded = source.info.get("icc_profile")
-    if embedded:
-        profile = ImageCms.ImageCmsProfile(BytesIO(embedded))
-        name = ImageCms.getProfileDescription(profile).strip()
-        converted = ImageCms.profileToProfile(
-            source.convert("RGB"),
-            profile,
-            srgb,
-            outputMode="RGB",
-            renderingIntent=0,
-        )
-        return converted, srgb.tobytes(), f"{name} -> sRGB"
-    return source.convert("RGB"), srgb.tobytes(), "untagged/sRGB-chunk -> embedded sRGB"
-
-
 def main() -> None:
     args = parse_args()
+    if not args.proposal_only:
+        raise SystemExit("BLOCKED: registration produces a proposal only. Use --proposal-only for inspection; final delivery requires workflow.py validate/package with observed evidence for EVERY semantic region. No alpha proxy is generated.")
+    if not args.slug or Path(args.slug).name != args.slug or args.slug in {'.', '..'}:
+        raise SystemExit("BLOCKED: slug must be a single filename component")
+    # Load only after the entrypoint has rejected the former unsafe invocation.
+    global cv2, np, Image, ImageCms
+    import cv2
+    import numpy as np
+    from PIL import Image, ImageCms
+    sys.path.insert(0, str(REPO / 'skills/locked-svg-material-render/scripts'))
+    from color_management import convert_srgb
     args.output_dir.mkdir(parents=True, exist_ok=True)
     args.proof_dir.mkdir(parents=True, exist_ok=True)
 
     source_image = Image.open(args.source)
-    source_srgb, export_icc, color_conversion = to_srgb(source_image)
-    source = np.array(source_srgb, dtype=np.uint8)
+    source_srgb, export_icc, color_conversion = convert_srgb(source_image, args.assume_srgb)
+    source = np.array(source_srgb.convert('RGB'), dtype=np.uint8)
     preview = cv2.resize(source, (1024, 1024), interpolation=cv2.INTER_AREA)
 
     exact = np.array(Image.open(args.mask).convert("L"), dtype=np.uint8)
+    if exact.shape != (1024, 1024):
+        raise SystemExit("BLOCKED: this historical registrar supports only the Matters 1024 fixture")
     exact_binary = np.uint8(exact >= 128) * 255
     exact_outer = fill_outer(exact_binary)
     source_outer = segment_outer(
@@ -155,7 +148,7 @@ def main() -> None:
         borderMode=cv2.BORDER_CONSTANT,
     )
 
-    final_path = args.output_dir / f"{args.slug}-final-1024.png"
+    final_path = args.output_dir / f"{args.slug}-UNVALIDATED-proposal-1024.png"
     Image.fromarray(final, "RGB").save(final_path, icc_profile=export_icc)
     high_path = None
     if args.highres:
@@ -170,7 +163,7 @@ def main() -> None:
             flags=cv2.INTER_LANCZOS4,
             borderMode=cv2.BORDER_REFLECT_101,
         )
-        high_path = args.output_dir / f"{args.slug}-final-{args.highres}.png"
+        high_path = args.output_dir / f"{args.slug}-UNVALIDATED-proposal-{args.highres}.png"
         Image.fromarray(high, "RGB").save(high_path, icc_profile=export_icc)
 
     overlay = final.copy()
@@ -180,29 +173,15 @@ def main() -> None:
     overlay_path = args.proof_dir / f"{args.slug}-model-overlay.png"
     Image.fromarray(overlay, "RGB").save(overlay_path, icc_profile=export_icc)
 
-    frontface_path = args.proof_dir / f"{args.slug}-frontface-pass.png"
-    Image.fromarray(np.dstack([final, exact]), "RGBA").save(
-        frontface_path, icc_profile=export_icc
-    )
-    alpha_report_path = args.proof_dir / f"{args.slug}-frontface-alpha-validation.json"
-    subprocess.run(
-        [
-            sys.executable,
-            str(VERIFIER),
-            "--mask",
-            str(args.mask),
-            "--candidate",
-            str(frontface_path),
-            "--report",
-            str(alpha_report_path),
-        ],
-        check=True,
-    )
-    alpha_report = json.loads(alpha_report_path.read_text())
     intersection = np.count_nonzero((registered_outer > 0) & (exact_outer > 0))
     union = np.count_nonzero((registered_outer > 0) | (exact_outer > 0))
+    differing = int(np.count_nonzero((registered_outer > 0) != (exact_outer > 0)))
 
     report = {
+        "status": "UNVALIDATED_PROPOSAL",
+        "delivery_ready": False,
+        "outer_differing_pixels": differing,
+        "missing_reviews": ["source segmentation", "inner panel", "left eye", "right eye", "smile", "material fidelity", "depth and effects"],
         "geometry_authority": str(args.svg),
         "appearance_authority": str(args.source),
         "method": "one whole-image affine registration; no repainting, inpainting, feature relocation, or material regeneration",
@@ -212,14 +191,14 @@ def main() -> None:
         "affine_matrix_1024": matrix_1024.tolist(),
         "registered_outer_bbox_1024": list(bbox(registered_outer)),
         "outer_mask_iou": float(intersection / union),
-        "front_face_alpha_verdict": alpha_report.get("status"),
-        "front_face_alpha_differing_pixels": alpha_report.get(
-            "differing_alpha_pixels"
-        ),
-        "allowed_overflow": "side thickness, bevel, material grains, contact shadow, and background",
-        "final": final_path.name,
-        "final_sha256": hashlib.sha256(final_path.read_bytes()).hexdigest(),
-        "highres_final": high_path.name if high_path else None,
+        "front_face_alpha_verdict": "NOT_RENDERED; proxy generation removed",
+        "effect_review": "PENDING; mismatches cannot be automatically excused as overflow",
+        "source_sha256": hashlib.sha256(args.source.read_bytes()).hexdigest(),
+        "source_svg_sha256": hashlib.sha256(args.svg.read_bytes()).hexdigest(),
+        "mask_sha256": hashlib.sha256(args.mask.read_bytes()).hexdigest(),
+        "candidate": final_path.name,
+        "candidate_sha256": hashlib.sha256(final_path.read_bytes()).hexdigest(),
+        "highres_candidate": high_path.name if high_path else None,
         "overlay": overlay_path.name,
     }
     report_path = args.proof_dir / f"{args.slug}-registration-report.json"

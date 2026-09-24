@@ -1,140 +1,53 @@
-# Acceptance gates
+# Acceptance: independent gates, no substitute evidence
 
-Every gate is mandatory. A later gate cannot compensate for an earlier failure.
+Select the acceptance mode before production. Historical tasks and omitted mode use `exact_geometry`. A user-authorized `series_consistency` task follows [series-consistency.md](series-consistency.md): the same source baseline is pinned, but final core placement and material extension have separate bounded allowances. Its series review replaces the demand for exact final coverage; source integrity, independent observations, material quality, color and hash binding still apply. Do not call a series pass pixel-exact.
 
-## Gate 0: requirement ledger
+## A. Source and runtime
 
-Before producing assets, record and freeze:
+Pin the repository commit and hash the files actually used. Verify original SVG, source masks, model and scripts for this task. A list of files on GitHub is not a downloaded bundle. Smoke-test the chosen runtime before spending on appearance generation. Missing Blender/OpenCV/source data is a blocker for a route requiring it, not implicit permission to downgrade the route.
 
-- the exact source geometry authority;
-- the role of every reference image (material/background/depth only unless explicitly stated otherwise);
-- whether each semantic region is open, filled, recessed, raised, or cut out;
-- whether perspective, side thickness, fibers, shadows, reflections, and glow may extend beyond the front-face mask;
-- whether the default deliverable keeps its background;
-- the expected variant count and names.
-- a separate layer-stack description for variants that reuse a material but differ in open, filled, inset, raised, or cut-out construction.
+## B. Geometry and construction
 
-Any ambiguity must be resolved before batch work. Later clarification updates the ledger; it does not excuse earlier unverified output.
+Extract/freeze masks directly from SVG with one recorded renderer. Record viewBox, canvas and shared transform. Inventory every region, its holes and depth role. For Matters require `outer`, `inner`, `left_eye`, `right_eye`, `smile`. Outer and inner are separate masks; eyes/smile are evaluated whether represented by solids or cavities. A depth change requires an updated construction contract, not new XY geometry.
 
-## Gate A: source geometry
+Compare independently observed regions with the source using the selected mode. Exact mode requires byte equality; series mode measures core centers, dimensions, overlap, relative facial layout and separate material effects. Equal boxes or union alpha alone cannot pass either mode. Do not loosen thresholds solely to pass a failure. Explicit new user scope changes are recorded as new contracts.
 
-Record:
+The current Matters source baseline is pinned in [matters-absolute-geometry.json](matters-absolute-geometry.json). Its 4x raster coverage is fixed independently of each task. Both modes reject substituted reference masks, omitted facial regions or changed canvas. Series mode changes final-image acceptance while retaining this source. Reference-image prompts do not enforce coordinates inside the generator.
 
-- source SVG path and immutable copy or checksum;
-- canvas width and height;
-- viewBox;
-- antialiased source mask path;
-- binary full-mark bbox;
-- connected-component bboxes, pixel areas, and centroids.
+Observed masks must come from actual geometry/render IDs or a reviewed segmentation tied to the final RGB. Copying the reference mask and setting an alpha channel is a proxy; it cannot be relabeled as observation. Actual contributing layers and reproducible compositing are useful evidence but still cannot certify the RGB inside them.
 
-The SVG paths and source mask are authoritative. A screenshot, generated image, Blender render, or visual estimate is not authoritative geometry.
+## C. Appearance and final visible boundaries
 
-## Gate B: model and camera
+Review exact final and authoritative overlay at 100% plus fit view. Inspect every lobe/corner/notch, inner boundary, both eyes and smile. Distinguish front cap edge from side return, bevel, reflection, shadow, fibers and glow. Reject displaced/double edges, old generated features and apparent boundary shifts.
 
-- Use one shared transform from the complete SVG canvas into the scene.
-- Preserve front-plane geometry. Add depth, side faces, bevel returns, fibers, and effects as separate geometry or render layers.
-- Use an orthographic front camera by default. Perspective is allowed when the requested reference has a view angle, but all front-face components must share one projective transform.
-- Render a front-face ID/coverage pass before materials. If perspective is used, rectify that plane back to the source canvas before comparison.
-- Compare the rectified front-face proof with the source mask. Do not accept “visually close.”
-- Total visible silhouette may exceed the SVG because of approved depth/effects. Those pixels must not be included in the front-face coverage pass.
+Compare final and clean style reference at comparable scale, including material-specific crops. Explicitly assess:
+- depth sign/layer order: raised versus inset versus cavity;
+- texture character and scale, pressure/roughness variation;
+- volume, edge transitions and interaction with light;
+- light direction, highlight breadth, reflection strength and contact shadow;
+- background and reference-specific details.
 
-## Gate C: material fidelity
+Fine flock is not carpet or terry cloth. Paper is not generic noise. Sandstone is not a blurry bevel filter. Copper needs coherent curved reflection bands, not a painted gradient. A plausible thumbnail is insufficient. Uncertain review stays pending; failed material cannot become final merely because geometry passes.
 
-Before rendering, write a short material target with:
+## D. Binding and color
 
-- dominant and highlight colors;
-- apparent fiber or grain size at final resolution;
-- roughness, sheen, and reflectance;
-- macro volume and light direction;
-- explicit rejection examples.
+Final must be the exact reviewed bytes. Every region observation, visual review, color record and overlay must name/hash that final (overlay bytes are separately hashed). Changing the image, model, masks, contract or source invalidates affected evidence. Perform actual ICC conversion for tagged wide-gamut input. Profile presence or the word sRGB alone cannot prove conversion happened.
 
-For orange short-flock references, reject:
+## E. Release
 
-- coarse terry loops, chenille, carpet, knitting, or visible weave;
-- speckled red/black noise or large blotches;
-- repeated or mirrored tile patterns;
-- plastic, clay, or uniform flat fill;
-- long hairs or a halo crossing the SVG mask;
-- material-generated folds or object shapes unrelated to the model.
+Only `workflow.py package` after all gates can produce an eligible final archive. It reruns checks. Legacy alpha `PASS` is never a whole-delivery result. A failed/incomplete run yields a blocker report; it must not emit an apparently final picture merely accompanied by a disclaimer.
 
-Material appearance must be visually reviewed at 100% and fit-to-screen. A mask pass alone is insufficient.
+### Regression cases that MUST be rejected
 
-Also perform an RGB geometry-cue review with the source guide overlaid. Reject if:
+1. Same outer bbox, but smile or eyes exceed the selected placement limits (any difference in exact mode).
+2. Exact alpha on a plate containing wrong inner panel RGB.
+3. An inherited generated image offered as geometry authority.
+4. Correct mask with materially poor flat-shaded texture.
+5. Raised panel when ledger requires recessed panel.
+6. Blender startup failure or missing OpenCV while claiming original workflow executed.
+7. Stale hash/review after resizing/recoloring.
+8. Missing masks or reviews hidden behind a blanket PASS.
 
-- a previous generated silhouette remains visible inside the locked alpha;
-- a crust, bevel, inner-panel outline, eye, mouth, highlight rim, or shadow follows the reference object's old geometry instead of the source geometry;
-- a full-object style plate was merely cropped, scaled, or masked to obtain the final appearance;
-- any semantic material boundary cannot be traced back to a source-derived region mask.
-- the reference's depth sign or construction changes, such as an inset panel becoming raised;
-- distinctive texture, diffraction layout, grain scale, highlight pattern, or reflection intensity is regenerated into a different look instead of preserved.
-- source-region masks include surrounding tiles, background, unrelated objects, facial holes, or neighboring semantic materials;
-- texture mapping creates radial stretching, streaks, wedges, mirrored repetition, inpainting smears, or visible seams;
-- a result looks plausible in a contact sheet but fails at 100% inspection.
+## Historical Matters raster fixture
 
-The source-region masks themselves are review artifacts. Inspect them before any warp, projection, or batch render. A malformed source mask is a hard stop.
-
-For model-guided generative appearance, validate the exact gray/depth/ID guide first. The generated full-object image is only an RGB appearance plate. Its silhouette, panel edge, feature positions, alpha, and scale are rejected and replaced by SVG-derived semantic masks before the final is eligible for review.
-
-Reference screenshots must be cleaned before analysis. Editor selection borders, resize handles, guide lines, labels, and surrounding UI are not material evidence and must not enter source masks, texture swatches, lighting plates, or final crops.
-
-## Gate D: final front-face lock
-
-Run:
-
-```bash
-python3 scripts/lock_svg_alpha.py \
-  --material material-rgb.png \
-  --mask source-mask.png \
-  --output-transparent final-transparent.png \
-  --output-background final.png
-
-python3 scripts/verify_locked_render.py \
-  --mask source-mask.png \
-  --candidate final-transparent.png \
-  --report validation.json
-```
-
-Run the verifier on the isolated front-face pass. It must report:
-
-- identical canvas size;
-- zero differing alpha pixels;
-- maximum alpha delta of zero;
-- identical full-mark bbox;
-- identical component geometry.
-
-The composited final may have additional alpha outside the source mask for side faces, fibers, perspective depth, shadows, reflections, or glow. Keep that total-alpha result distinct from the verified front-face pass.
-
-### No proxy validation
-
-- The validation report must name the exact final asset and include its SHA-256.
-- A transparent helper proves only its own alpha. It cannot be cited as proof that an opaque or differently composited final is correct.
-- For opaque finals, also save an overlay made from that exact final and the authoritative guides. Inspect visible RGB boundaries, not only alpha.
-- The final overlay must make the distinction between the exact SVG front-face edge and permitted effect extents explicit. Review the full perimeter at 100%, including all four outer corners and every concave notch. Reject any effect whose direction, opacity, blur, or asymmetry makes it read as a shifted or enlarged object boundary.
-- Geometry reporting must use two separate verdicts: `front-face alpha` and `composited visible edge`. Never summarize the first verdict as proof of the second.
-- If the final is regenerated, recomposited, resized, or edited after validation, all validation for that final is invalid and must be rerun.
-
-## Gate E: delivery
-
-Deliver only when both are true:
-
-1. Geometry validation is `PASS`.
-2. Material review is `PASS` against the supplied reference.
-
-If either fails, label the result as rejected and do not present it as a final or usable output.
-
-Before batch delivery, the hardest representative variant must pass every gate. Batch production before that pilot passes is prohibited.
-
-Unless the user explicitly requests transparency, the primary deliverable must retain the reference-consistent background, contact shadow, ground reflection, and environmental lighting. Transparent front-face or object passes remain validation artifacts, not the default final.
-
-## Current Matters fixture
-
-When the source is `/Users/z/Desktop/matters.svg`, the locked contract is:
-
-- canvas: `1024 x 1024`;
-- full mark bbox: `(128, 128, 896, 896)`, right/bottom exclusive;
-- frame component: bbox `(128, 128, 896, 896)`, binary area `265881`;
-- left eye: bbox `(374, 394, 434, 502)`, binary area `5089`;
-- right eye: bbox `(590, 394, 650, 502)`, binary area `5089`;
-- smile: bbox `(434, 568, 621, 659)`, binary area `7631`.
-
-These values describe the current 128-threshold antialiased mask. Re-rasterizing with a different renderer may change edge coverage; if the renderer changes, establish a new authoritative mask once and then keep it fixed for the entire run.
+The original supplied fixture is 1024 square; union bbox `(128,128,896,896)` (exclusive right/bottom). Frame binary area 265881; eye bboxes `(374,394,434,502)` and `(590,394,650,502)`, each area 5089; smile bbox `(434,568,621,659)`, area 7631. These figures belong to the historical 128-threshold renderer, not every rasterizer. Preserve the supplied authoritative mask when available. If deliberately changing renderer, establish and document one new mask; do not mix it with old numeric claims.

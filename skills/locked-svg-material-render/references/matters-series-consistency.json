@@ -1,0 +1,18 @@
+{
+  "profile": "matters-series-consistency-v1",
+  "canvas": [1024, 1024],
+  "tolerance_origin": "Assistant-selected working limits following the user's 2026-09-23 permission for moderate material-edge extension; numbers are not user-specified.",
+  "regions": {
+    "outer": {"max_center_shift_px": 6, "max_size_change_fraction": 0.02, "min_core_iou": 0.90, "max_material_extension_px": 12},
+    "inner": {"max_center_shift_px": 6, "max_size_change_fraction": 0.02, "min_core_iou": 0.90, "max_material_extension_px": 8},
+    "left_eye": {"max_center_shift_px": 5, "max_size_change_fraction": 0.12, "min_core_iou": 0.82, "max_material_extension_px": 8},
+    "right_eye": {"max_center_shift_px": 5, "max_size_change_fraction": 0.12, "min_core_iou": 0.82, "max_material_extension_px": 8},
+    "smile": {"max_center_shift_px": 5, "max_size_change_fraction": 0.12, "min_core_iou": 0.82, "max_material_extension_px": 8}
+  },
+  "max_eye_spacing_vector_change_px": 6,
+  "max_face_to_inner_relative_shift_px": 5,
+  "contact_sheet_sizes": [64, 128],
+  "material_extension_metric": "Euclidean pixel radius from independently observed core; allows local bevel/refraction/fibers, excludes detached cast shadow and background.",
+  "source_policy": "Keep the original SVG, canvas, and all five reference masks pinned. This profile changes final-image acceptance, not source geometry.",
+  "generator_hard_coordinate_control": false
+}

@@ -1,4 +1,4 @@
 interface:
   display_name: "Locked SVG Material Render"
-  short_description: "Apply materials while preserving exact SVG geometry"
-  default_prompt: "Use $locked-svg-material-render to apply a reference material to my SVG without changing any geometry."
+  short_description: "Apply materials with exact or series-consistent SVG layout"
+  default_prompt: "Use $locked-svg-material-render to apply a reference material to my SVG, preserving placement and using the geometry tolerance I specify."

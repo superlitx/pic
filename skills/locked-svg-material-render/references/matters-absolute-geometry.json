@@ -1,0 +1,92 @@
+{
+  "source_svg_sha256": "a38a29edf2a354456593eb2b8178f2ecec4ef15cd69d30629679832882429aa2",
+  "canvas": [
+    1024,
+    1024
+  ],
+  "coordinates": "original SVG canvas; top left origin; exclusive right/bottom bounds",
+  "regions": {
+    "outer": {
+      "bbox_exclusive": [
+        128,
+        128,
+        896,
+        896
+      ],
+      "binary_centroid": [
+        511.499194457718,
+        511.49803100157334
+      ],
+      "coverage_mask_sha256": "43d511be47d7c6a6a5895a1de758051e7e7d44b0d13497cfa34c999c49c0304e",
+      "allowed_differing_coverage_pixels": 0
+    },
+    "inner": {
+      "bbox_exclusive": [
+        240,
+        240,
+        784,
+        784
+      ],
+      "binary_centroid": [
+        511.49671580624965,
+        511.4971218244256
+      ],
+      "coverage_mask_sha256": "ed0ff3b21f3a23b854274d8cae0dc4c5b4d562623dc9cb7d2ddd1a33b6159d97",
+      "allowed_differing_coverage_pixels": 0
+    },
+    "left_eye": {
+      "bbox_exclusive": [
+        374,
+        394,
+        434,
+        502
+      ],
+      "binary_centroid": [
+        403.49598118016075,
+        447.49225642030973
+      ],
+      "coverage_mask_sha256": "ffc38d6960180699881ec6f2dd120fffdf8c993f0f2e970138c534c94fe3bb49",
+      "allowed_differing_coverage_pixels": 0
+    },
+    "right_eye": {
+      "bbox_exclusive": [
+        590,
+        394,
+        650,
+        502
+      ],
+      "binary_centroid": [
+        619.4959811801607,
+        447.49225642030973
+      ],
+      "coverage_mask_sha256": "97bb6e82f2c9085977843717cf28060e99ebd70e1e0042a7dec51fcc754a49f0",
+      "allowed_differing_coverage_pixels": 0
+    },
+    "smile": {
+      "bbox_exclusive": [
+        434,
+        568,
+        621,
+        659
+      ],
+      "binary_centroid": [
+        529.0028746896642,
+        623.062589834052
+      ],
+      "coverage_mask_sha256": "d1f3f7031c900ed4203676fdbaa4ce9ef5686c1f18fcc671d6c98aaacd2a4fe8",
+      "allowed_differing_coverage_pixels": 0
+    }
+  },
+  "allowed_xy_transform": "identity in SVG 1024 canvas; only shared whole-canvas raster resolution conversion allowed",
+  "forbidden": [
+    "per-feature fitting",
+    "change SVG paths",
+    "replace source masks",
+    "relax tolerance after generation",
+    "copied alpha as proof of generated RGB",
+    "deliver before independent visual and geometry checks"
+  ],
+  "enforcement": "workflow.py validate/package requires byte equality of all independently observed regional coverage and source masks",
+  "generator_supports_hard_coordinate_input": false,
+  "generation_prompt_is_not_hard_control": true
+}

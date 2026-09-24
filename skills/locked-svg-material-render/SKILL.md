@@ -1,67 +1,70 @@
 ---
 name: locked-svg-material-render
-description: Apply a reference material or surface style to an existing SVG or logo while preserving its exact canvas, paths, element positions, holes, and silhouette. Use for locked-geometry logo renders, Blender material studies, and app-icon styling where shape changes are forbidden; do not use for logo redesigns or freeform reinterpretation.
+description: Apply reference materials to SVG-defined artwork with exact geometry or user-authorized visual consistency across a series. Keep shared scale, placement and facial layout, with separately bounded material edges. Includes runtime preflight and delivery checks.
 ---
 
-# Locked SVG Material Render
+# Locked SVG Material Render — workflow 2
 
-Treat the source SVG as the sole geometry authority and reference images as material authority only. Never trade geometry accuracy for a more attractive render.
+SVG owns geometry. References own material, lighting and construction. An attractive image and a matching outer rectangle do not establish geometric correctness.
 
-## Non-negotiable contract
+For a reference-only request such as “此风格”, continue the existing mark and read [regional material and construction choices](references/regional-materials.md). Resolve the user's latest center/face instructions before generating: a filled center, colored eyes and cut-through eyes are different constructions. For repeated styles, reuse checksum-verified source guides, not a previous generation's geometry or its entire task manifest.
 
-- Preserve the original canvas size, viewBox, path data, front-face element bounds, holes, centroids, and relative positions.
-- Apply one shared canvas-to-scene transform to every front-face element. Never fit, center, or perspective-correct individual elements separately.
-- Lock the front-face geometry to the SVG. Physical thickness, side faces, bevel returns, fibers, cast shadows, reflections, and glow may extend outside the front-face mask when required by the reference.
-- Orthographic front view is the default. A perspective or angled camera is allowed when requested, but every front-face element must receive the same projective transform and remain correct when the front plane is rectified.
-- Do not deliver or present a raw generative full-logo image. Image generation may create a boundary-free material swatch. When the user explicitly chooses a model-guided appearance workflow, it may also create a full-object RGB appearance plate from an exact depth/ID guide, but that plate never owns alpha, silhouette, region boundaries, or feature positions.
-- Never clip a full-object reference image through the source mask when that reference contains old contours, internal panel edges, facial features, bevel boundaries, or cast shadows. Those RGB geometry cues survive alpha locking and create a false pass.
-- For multi-region materials, isolate a boundary-free swatch for every semantic region (for example crust, crumb, biscuit face, foil frame, pearl panel). Rebuild every visible boundary from source geometry, never from the material reference.
-- Treat visually similar variants as separate construction specifications. For example, an open center, a filled inset panel, and a raised center plate are three different layer stacks even when all use the same orange flock.
-- Do not treat editor chrome, selection handles, guides, labels, or screenshot margins as reference content. Obtain a clean asset export when available; otherwise record and remove the UI crop before material analysis.
-- Treat the reference's macro construction as immutable material evidence: recessed versus raised regions, layer order, seam behavior, edge thickness, reflection strength, lighting direction, and texture scale must not be creatively reinterpreted.
-- Maintain a separate front-face coverage pass whose rectified alpha is byte-identical to the authoritative SVG mask. Total rendered alpha may be larger when approved depth or effects extend beyond the front face.
-- A geometrically correct but materially poor result is still a failure. Never call an output complete merely because the mask passes.
-- Default delivery is the complete background-composited image. Preserve reference-consistent backdrop, contact shadow, ground reflection, and environmental light. Produce a transparent-background deliverable only when the user explicitly requests one; a transparent front-face pass may still be kept internally for validation.
-- Preserve perceived color through an explicit ICC-managed conversion. For Figma-targeted PNG delivery, convert Display P3 pixels through the embedded source profile into sRGB and embed a standard sRGB profile; never strip the profile or merely relabel unchanged P3 pixel values as sRGB. Preserve Display P3 only when the user explicitly requires a P3 deliverable. When the source declares an sRGB PNG chunk without an ICC payload, embed a standard sRGB profile in the result.
+## Select acceptance from the user's actual goal
 
-## Required workflow
+Use `exact_geometry` for an explicit pixel-exact request. When the user allows material edges to extend and prioritizes a visually consistent series, use `series_consistency` and read [series-consistency.md](references/series-consistency.md). Keep the SVG baseline but evaluate core placement separately from bevel, refraction and fibers. Do not sacrifice approved generative appearance merely to obtain exact coverage under this mode. A full generated image may be delivered after the bounded series checks and visual review pass; it does not need replacement with a procedural beauty render.
 
-1. Freeze a written requirement ledger before production: geometry authority, material references, per-variant layer order, recessed/raised state, camera allowance, background policy, and output count. Do not silently revise it during iteration.
-2. Establish and record the geometry contract before material work: canvas dimensions, viewBox, full mark bbox, and component bboxes.
-3. Rasterize the original SVG once with a deterministic renderer. Save that coverage image as the authoritative mask; do not derive the mask from a generated or styled result.
-   - If the user has already approved the reference appearance and identifies only cross-variant scale or position inconsistency, enter **registration mode**. Preserve the complete reference image and its pixels; use the SVG-derived model's orthographic front-face projection only to calculate one whole-image transform. Do not regenerate materials, repaint facial features, inpaint the background, or reconstruct semantic regions unless registration demonstrably cannot align them.
-4. Build or import the model with a single transform. Render a flat geometry proof and compare it with the authoritative mask before adding materials.
-5. Analyze the material reference separately: base color, fiber/grain scale, roughness, sheen, macro lighting, layer order, and forbidden artifacts.
-6. Validate every extracted source-region mask before texture mapping. Stop if a mask touches unrelated background objects, joins separate objects, contains holes from facial features, or visibly departs from its intended semantic region.
-7. Produce material appearance without giving a generative model authority over logo geometry. Prefer region-specific texture swatches or procedural shaders. An RGB lighting plate is allowed only when it contains no old object boundary or feature geometry.
-   - For a model-guided appearance workflow, render the exact model as the edit target and label the material image as style-only. Treat the generated result as an RGB appearance proposal; discard its geometry and snap every semantic region back through the SVG-derived masks before review.
-8. Complete one representative difficult variant and pass all gates before batch-producing siblings. Do not batch an unproven pipeline.
-9. Composite the approved front-face RGB appearance through the authoritative SVG masks. Composite approved depth/effect layers separately, behind or outside the front face.
-10. Inspect the actual final at 100% and fit-to-screen with the source guide overlaid. Reject stretching, streaking, duplicated outlines, old features, incorrect depth, or material drift before running delivery validation.
-   - Inspect the opaque, background-composited final itself, not only the isolated front-face pass. Classify every visible contour outside the SVG as an approved effect (side face, fiber, shadow, reflection, or glow). If a halo, highlight, bevel, or shadow reads as a displaced object edge, reject or repair it even when front-face alpha is byte-identical.
-11. Run `scripts/verify_locked_render.py` on the front-face coverage pass, not on total rendered alpha. Bind the report to the exact final asset with its filename and SHA-256; a helper or proxy file cannot validate a different final image.
-12. Deliver the background-composited final only when numeric geometry review and visual material review both pass. Deliver a transparent final only when explicitly requested. Keep raw generations, failed drafts, and unapproved candidates out of the handoff.
+The user's 2026-09-23 Matters instruction allows moderate edge extension while retaining stable size, position and facial layout across the series. It authorizes this session's switch to `series_consistency`; the numeric defaults are assistant-selected working limits, not numbers specified by the user. Existing strict reports keep their original meaning. Record the new choice and authorization in a new task contract; do not retroactively mark old failed candidates approved.
 
-Read [references/acceptance.md](references/acceptance.md) before executing or reviewing a render. It contains the stage gates, rejection criteria, and the current Matters fixture.
+## Start here, before any generation
 
-## Decision rules
+1. Read [acceptance.md](references/acceptance.md) and [workflow.md](references/workflow.md). Select `new_material`, `registration` or `depth_revision` from the user's intent. Also freeze who produces appearance: if the user assigns the model to positioning and requests image generation for effects, record `production_route: model_guided_appearance`; that choice overrides the procedural-material preference below.
+2. Verify the task-required source files against a pinned repository revision. Record what is present and missing. Remote README access is not local synchronization. Unrelated old variants need not be downloaded; never describe a partial snapshot as a full clone or installation.
+3. Freeze the geometry/construction contract: original SVG and checksum, canvas/viewBox, renderer, authoritative masks, ALL semantic regions and their raised/recessed/open/cut-out roles, allowed effects, background and output count. For Matters this includes outer silhouette, inner boundary, left eye, right eye and smile—not just a union alpha. White SVG canvas rectangles are background; document foreground extraction without changing paths.
+   For the current Matters source, load [the absolute geometry policy](references/matters-absolute-geometry.json), copy it unchanged into the task, and bind it as `contract.absolute_geometry_rules: {path, sha256}`. This freezes the original SVG, 1024 canvas and five complete reference masks. The execution gate rejects substituted references or omitted regions in either mode. Freeze final-image tolerances before generation; a later explicit user scope change requires a newly recorded contract, not an overwritten historical verdict. These are release criteria, not generator coordinate-control capabilities.
+4. Create the local task manifest in the documented schema. Run `scripts/workflow.py preflight` using the actual planned runtime. A failed smoke render, missing source or dependency is `BLOCKED`. Fix the environment within available permissions or report the concrete blocker. Do not silently replace modeling with image generation, a height-filter approximation or hand-written gradients.
 
-- If visible fibers cross the SVG boundary, keep them only in a separately reviewable depth/effect layer; they may not redefine the front-face path.
-- If a geometric bevel changes the front-face mask, keep the original front face as a separate exact cap and place bevel/side geometry behind it.
-- If the reference has fine flock but the result resembles towel loops, carpet, noise, fabric weave, or repeated tiles, reject the material stage.
-- If geometry passes but material fidelity is uncertain, report that the result is not yet acceptable and continue only with the material stage. Do not regenerate geometry.
-- Alpha equality proves coverage only. It cannot validate visible RGB contours. Reject any render whose RGB contains a second silhouette, old inner border, duplicated feature, or reference-derived shadow that does not align with source geometry.
-- Reject any candidate that changes a recessed panel into a raised plate (or the reverse), invents extra rims or bevels, increases gloss/reflection beyond the reference, or replaces distinctive reference texture with a generic version of the material.
-- Reject radial smearing, stretched pores, brush-like streaks, mirrored or repeated texture patches, inpainting seams, and any texture deformation that reveals the mapping method.
-- Never let a full-logo generation become final geometry. In the explicit model-guided workflow, a full-object generation is allowed only as an internal RGB appearance plate between an exact model guide and deterministic SVG re-locking; it must not be shown or handed off before the final mask/overlay gates pass.
-- When an approved reference already has the desired material, lighting, background, depth, and features, do not invoke image generation merely to normalize a series. Register the existing image as a whole to the model's locked front-face projection. Preserve the background, contact shadow, side thickness, bevels, and texture in the same transform. Treat effects beyond the locked cap as allowed overflow; do not crop them back to the SVG bbox.
-- Registration mode must record the source and target front-face bboxes, the applied transform, the exact-model front-face alpha result, and an overlay review of the opaque final. If a single whole-image transform aligns the reference, stop there: local feature relocation, warping, inpainting, or texture synthesis is prohibited because it changes an already-approved appearance.
-- In registration mode, inspect the input and final color profiles as part of validation. For Figma delivery, require an embedded sRGB profile and confirm that any wide-gamut input was profile-converted rather than stripped or retagged; otherwise the artwork may appear desaturated.
-- When the user assigns modeling to position only, do not spend production time rebuilding the final material in Blender. Use Blender for geometry, depth, normals, ID masks, and shadow guides; use the requested drawing/generative stage for material and effects; then perform deterministic SVG re-locking.
-- Never validate a background-composited final by testing the alpha of a separately constructed transparent proxy. A proxy may prove the mask implementation, but it cannot prove the visible RGB geometry of the final.
-- Never report `0 pixel difference` without naming the tested layer. Say `front-face alpha: 0 differing pixels`; separately report the composited-final visible-edge review. A front-face pass cannot certify shadows, halos, side faces, or RGB edge placement in the final.
-- Never call a batch complete after inspecting only a contact sheet. Every variant must be reviewed individually at 100%, and the contact sheet is supplementary.
-- Never infer a semantic region from color alone when the reference contains shadows, adjacent objects, or similarly colored backgrounds. Confirm the region against the reference construction and inspect its binary mask before use.
-- If a source segmentation, warp, or material extraction fails once, repair and revalidate that stage before rendering more variants. If the same failure class repeats, discard the method instead of stacking corrective patches.
-- Do not expose raw tool output as a result before the required gates. Label unavoidable previews explicitly as unvalidated and never describe them as final, passed, or usable.
-- Do not redefine the user's locked rules during iteration. Change only the failing stage.
+On another machine, verify the actual local skill/scripts against the intended Git revision before production. A successful push, a remote README, or an old source-asset revision does not prove that this machine loaded the new skill. The pinned source SVG revision and the version of the workflow are separate facts.
+
+For the bundled Matters project, `build_constraint_model.py` creates an emission-colored geometry guide, not a finished material renderer. `register_reference.py` creates an unvalidated whole-image registration proposal only. Neither is a working sandstone/material production pipeline. Do not invent a successful production stage when only those helpers exist.
+
+## Choose the right production route
+
+- **Model-guided appearance, when selected by the user:** the model is used only for exact position, silhouette, regional IDs, depth, normals and optional shadow guides. Use the image-generation stage for the requested material, lighting and surface appearance. Do not replace that stage with a fully procedural beauty render, even if a CPU/GPU renderer is available. Start with one difficult variant, inspect its actual RGB boundaries, and reject a drifting result before making siblings. The generative tool's reference-image input is guidance, not an enforced per-pixel geometry lock. Deterministic compositing may use SVG coverage only after RGB boundary checks; it cannot erase wrong geometry already visible inside a plate.
+- **New material:** construct exact geometry from the original SVG or verified model. Establish the flat geometry proof and regional ID masks first. Add volume, depth, surface normals, material and effects appropriate to the reference. Procedural methods are valid when they actually represent the required construction; texture plus offset shadow is not a substitute for modeled rounded volume, refraction or carved walls.
+- **Registration:** only for an already accepted complete appearance. Preserve the whole image and perform one shared transform, including shadows/background. Bbox fitting is a candidate stage, never a final verdict. Check every semantic region afterward. If internal boundaries disagree, report registration as insufficient; do not pretend another global scale fixes it. Return to SVG-constrained production for failed regions while preserving accepted appearance where possible.
+- **Depth revision:** freeze a new layer-stack contract reflecting the user's change (for example raised eyes become cavities). Start from the authoritative geometry and retained material evidence. A previous image is appearance reference, not replacement geometry. Do not infer a raised center panel merely because the user changed the eyes.
+
+## Image generation has no geometry authority
+
+A material/light probe may also be generated for normal-indexed appearance projection. The model owns all XY coverage and surface normals; the generated probe supplies only sampled radiance. Calibrate the specimen's texture coordinates separately, exclude its background/silhouette pixels, and never use its shape as logo geometry. This is baked, view-dependent appearance, not a claim of physical glass transmission. Validate actual contributing model IDs plus final RGB and reject stretched grain, streaks, or inadequate material quality. Fine grain belongs in boundary-free surface coordinates, not a normal-indexed lookup that stretches it. This route does not permit warping an inaccurate full-logo generation.
+
+A material-only swatch must contain no object boundaries, features, panel rims or cast shadows. In exact mode, a full-object generated plate is an internal appearance candidate until source-derived construction and independent checks establish exact geometry. In series mode, preserve a high-quality full generation when its independently observed core placement, bounded material effects and series review pass. Asking for coordinates is guidance in both modes. Copying SVG alpha onto an unchanged RGB plate does not remove wrong internal features.
+
+Never chain an unverified generated result as the geometry source of the next style. Do not expose a raw generation or failed candidate as the answer to a strict-geometry task. If the user explicitly requests an appearance-only preview, label its limits; that request does not approve its geometry or admit it into final delivery. If a tool automatically exposes raw output, warn before the call that it is unvalidated and do not describe it as a result.
+
+Failed registration is not permission to use TPS, radial warps, per-feature fitting, smudge repair, or painted edges. In exact mode, reconstruct the scene from SVG geometry. In series mode, regenerate a drifting candidate using the original guide and a specific measured correction, with a bounded retry budget. A manually traced generated contour may be an observation, never the reference for subsequent styles. Runtime failure does not authorize a silent route change.
+
+## Mandatory release path
+
+Use `workflow.py validate` and `workflow.py package`, not the legacy alpha helper, for final delivery. The documented task manifest binds all evidence to exact files. The gate requires:
+
+- all source-defined regional coverage checks, including holes and the inner panel;
+- observations from real rendered geometry IDs or reviewed segmentation of the exact final RGB, never copied authoritative masks;
+- review of actual RGB edges and approved effect extents at native and fit size;
+- side-by-side material review, correct depth construction, source-region/texture quality;
+- explicit color handling and embedded sRGB, exact-final SHA-256, and nonstale evidence.
+
+`verify_locked_render.py` is a coverage diagnostic only. Its compatibility `status: PASS` never authorizes delivery. A proxy is labeled as a proxy. The package command refuses incomplete/failed/stale evidence; do not hand-build a final ZIP or edit a report to bypass it. Never mark a visual check PASS merely because coverage passed.
+
+## Production invariants
+
+- Preserve source paths, element locations, canvas and one shared canvas-to-scene transform. No per-feature fitting to hide geometry drift. Rectify a permitted perspective before testing the original plane.
+- Distinguish front cap, aperture, cavity wall/bottom and total effect silhouette. A cavity-opening mask cannot certify a recessed floor. Keep depth effects separate from exact front coverage.
+- Preserve reference construction, grain scale, light direction, texture detail and reflection strength. No invented panels, glossy rims or missing background unless user requests that change. Remove screenshot UI before using pixel material evidence; never transfer grids/handles/text.
+- Inspect extracted semantic masks before mapping. Reject contaminated regions, smears, radial stretching, duplicated contours, repeated tiles or old facial geometry. Repair a failing stage rather than adding corrective patches indefinitely.
+- Profile-convert wide-gamut input into sRGB before processing. Never strip/retag P3 pixels. Record explicit assumptions for truly untagged input; sRGB chunks can be promoted to a standard embedded profile.
+- Keep drafts, rejected work and historical approvals distinct. Do not overwrite an approved asset or rewrite its history. Revalidate after every final-image change.
+
+## Honest limit
+
+This skill is an instruction set plus a release gate, not an image renderer or a security boundary. The scripts detect absent/stale evidence and numerical mismatch; they cannot prove that a reviewer is truthful or automatically judge material fidelity. Never promise that editing a skill alone makes an unconstrained generator exact. Report unresolved limits instead of declaring success.
